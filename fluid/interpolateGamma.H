@@ -18,4 +18,6 @@
     );
   }
 
+  gamma = gamma*alpha1;
+
 

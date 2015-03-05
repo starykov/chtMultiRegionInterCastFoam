@@ -40,12 +40,10 @@
 
     volScalarField& gamma = gammaFluid[i];
 
- 	#include "interpolateProperties.H"
+ 	#include "interpolateGamma.H"
 	//#include "interpolateRho.H"
 
     //rho1 = mixture.thermo1().rho();
-
-    gamma = gamma*alpha1;
 
     volScalarField& rho = rhoFluid[i];
     rho = alpha1*rho1 + alpha2*rho2;
@@ -55,6 +53,8 @@
     volScalarField& KInv = KInvFluid[i];
 	dimensionedScalar& d = dFluid[i];
 	dimensionedScalar& Tsol = TsolFluid[i];
+	dimensionedScalar& Tliq = TliqFluid[i];
+	dimensionedScalar& L = LFluid[i];
 
 
     //rhoPhi.write();

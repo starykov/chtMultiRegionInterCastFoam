@@ -18,6 +18,8 @@
 PtrList<dimensionedScalar> dFluid(fluidRegions.size());
 //PtrList<volScalarField> KInvFluid(fluidRegions.size());
 	PtrList<dimensionedScalar> TsolFluid(fluidRegions.size());
+	PtrList<dimensionedScalar> TliqFluid(fluidRegions.size());
+	PtrList<dimensionedScalar> LFluid(fluidRegions.size());
 
 
     PtrList<volVectorField> UFluid(fluidRegions.size());
@@ -273,6 +275,19 @@ PtrList<dimensionedScalar> dFluid(fluidRegions.size());
     			new dimensionedScalar(mixtureFluid[i].lookup("Tsol"))
     	);
 
+    	// Dendrite arm spacing
+    	TliqFluid.set
+    	(
+    			i,
+    			new dimensionedScalar(mixtureFluid[i].lookup("Tliq"))
+    	);
+
+    	// Dendrite arm spacing
+    	LFluid.set
+    	(
+    			i,
+    			new dimensionedScalar(mixtureFluid[i].lookup("L"))
+    	);
 
 
         Info<< "    Adding to gFluid\n" << endl;
