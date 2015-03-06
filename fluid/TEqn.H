@@ -5,16 +5,25 @@
     double diff1=0.0;
     double diff2=0.0;
     double diff3=0.0;
+    volScalarField gammaO("gammaO",gamma);
 
     solverPerformance::debug=0; // do not write solver specification out again
 
+    gamma.storePrevIter();
 
     do
       {
 
+    	gammaOld = gamma.prevIter();
     	 gamma.storePrevIter();
 
+
     	    iter++;
+    	//if (gamma == gammaOld) {Info << "gamma is equal to gammaold" << endl;}
+    	    dgammadt = (gamma-gammaOld)/runTime.deltaT();
+    LSource = L*rho/mixture.Cp()*(dgammadt);
+
+
 
     fvScalarMatrix TEqn
     (
@@ -30,7 +39,7 @@
            alpha1/mixture.thermo1().Cv()
          + alpha2/mixture.thermo2().Cv()
         )
-		== L*rho/mixture.Cp()*(fvc::ddt(gamma))
+		== LSource//L*rho/mixture.Cp()*(fvc::ddt(gamma))
     );
 
     TEqn.relax();
@@ -43,7 +52,11 @@
     #include "interpolateGamma.H"
     gamma.relax();
 
+
     diff1 = Foam::gMax(mag(gamma.internalField()-gamma.prevIter().internalField()));
+
+
+
 
     if (iter==1) {diff3=ini; solver=sp.solverName(); field=sp.fieldName(); diff2=diff1;}
 
@@ -55,7 +68,7 @@
 
     //mixture.T()=T;
 
-    //mixture.correct();
+    mixture.correct();
 
     solverPerformance::debug=1; // write out again solver news
 
@@ -69,9 +82,9 @@
       //v = pos(T-Tsol)*pos(Tliq-T)*mag(fvc::ddt(fs))/(mag(fvc::grad(fs))+dimensionedScalar("SMALL", dimless/dimLength, SMALL));
 
       // normal vector for the solid fraction contours
-      //fsN=fvc::grad(fs)*dimensionedScalar("one", dimLength, 1.0);
-      //fsN.dimensions().reset(dimless);
-      //fsN=-1.0*pos(T-Tsol)*pos(Tliq-T)*fsN/(mag(fsN)+SMALL);
+      gammaN=fvc::grad(gamma)*dimensionedScalar("one", dimLength, 1.0);
+      gammaN.dimensions().reset(dimless);
+      gammaN=-1.0*pos(T-Tsol)*pos(Tliq-T)*gammaN/(mag(gammaN)+SMALL);
 
     Info<< "min(T) " << min(T).value() << " max(T) " << max(T).value() << endl;
     Info<< "min(T(alloy)) " << min(T*alpha1).value() << " max(T(alloy)) " << max(T*alpha1).value() << endl;

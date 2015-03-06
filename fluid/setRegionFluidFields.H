@@ -56,6 +56,11 @@
 	dimensionedScalar& Tliq = TliqFluid[i];
 	dimensionedScalar& L = LFluid[i];
 
+	volVectorField& gammaN = gammaNFluid[i];
+	volScalarField& LSource = LSourceFluid[i];
+	volScalarField& dgammadt = dgammadtFluid[i];
+	volScalarField& gammaOld = gammaOldFluid[i];
+
 
     //rhoPhi.write();
 

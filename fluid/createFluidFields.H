@@ -20,9 +20,12 @@ PtrList<dimensionedScalar> dFluid(fluidRegions.size());
 	PtrList<dimensionedScalar> TsolFluid(fluidRegions.size());
 	PtrList<dimensionedScalar> TliqFluid(fluidRegions.size());
 	PtrList<dimensionedScalar> LFluid(fluidRegions.size());
-
+	PtrList<volScalarField> LSourceFluid(fluidRegions.size());
+	PtrList<volScalarField> dgammadtFluid(fluidRegions.size());
+	PtrList<volScalarField> gammaOldFluid(fluidRegions.size());
 
     PtrList<volVectorField> UFluid(fluidRegions.size());
+    PtrList<volVectorField> gammaNFluid(fluidRegions.size());
     PtrList<surfaceScalarField> phiFluid(fluidRegions.size());
     PtrList<surfaceScalarField> rhoPhiFluid(fluidRegions.size());
     PtrList<surfaceScalarField> phiCpFluid(fluidRegions.size());
@@ -486,6 +489,81 @@ PtrList<dimensionedScalar> dFluid(fluidRegions.size());
 				                )
             )
         );
+        gammaFluid[i].oldTime();
+
+
+        Info<< "    Adding to gammaFluid\n" << endl;
+        LSourceFluid.set
+        (
+            i,
+            new volScalarField
+            (
+                IOobject
+                (
+                    "LSource",
+                    runTime.timeName(),
+                    fluidRegions[i],
+                    IOobject::NO_READ,
+                    IOobject::AUTO_WRITE
+                ),
+                fluidRegions[i],
+				dimensionedScalar
+								                (
+								                    "LSource",
+													dimensionSet (1,-3,-1,1,0,0,0),
+								                    0
+								                )
+            )
+        );
+
+
+        Info<< "    Adding to gammaFluid\n" << endl;
+        dgammadtFluid.set
+        (
+            i,
+            new volScalarField
+            (
+                IOobject
+                (
+                    "dgammadt",
+                    runTime.timeName(),
+                    fluidRegions[i],
+                    IOobject::NO_READ,
+                    IOobject::AUTO_WRITE
+                ),
+                fluidRegions[i],
+				dimensionedScalar
+								                (
+								                    "dgammadt",
+													dimensionSet (0,0,-1,0,0,0,0),
+								                    0
+								                )
+            )
+        );
+
+        Info<< "    Adding to gammaFluid\n" << endl;
+                gammaOldFluid.set
+                (
+                    i,
+                    new volScalarField
+                    (
+                        IOobject
+                        (
+                            "gammaOld",
+                            runTime.timeName(),
+                            fluidRegions[i],
+                            IOobject::NO_READ,
+                            IOobject::AUTO_WRITE
+                        ),
+                        fluidRegions[i],
+        				dimensionedScalar
+        								                (
+        								                    "gammaOld",
+        													dimless,
+        								                    0
+        								                )
+                    )
+                );
 
         Info<< "    Adding to gammaFluid\n" << endl;
         KInvFluid.set
@@ -510,6 +588,31 @@ PtrList<dimensionedScalar> dFluid(fluidRegions.size());
 				                )
             )
         );
+
+
+
+    	Info<< "    Adding to rho1Fluid\n" << endl;
+    	gammaNFluid.set
+    	(
+    			i,
+    			new volVectorField
+    			(
+    					IOobject
+    					(
+    							"gammaN",
+    							runTime.timeName(),
+    							fluidRegions[i],
+    							IOobject::NO_READ,
+    							IOobject::AUTO_WRITE
+    					),
+    					//mixtureFluid[i].thermo1().rho()
+    					fluidRegions[i],
+    					vector(0,0,0)
+    			)
+    	);
+    	gammaNFluid[i]=fvc::grad(gammaFluid[i])*dimensionedScalar("one", dimLength, 1.0);
+        gammaNFluid[i].dimensions().reset(dimless);
+        gammaNFluid[i]=-1.0*pos(TFluid[i]-TsolFluid[i])*pos(TliqFluid[i]-TFluid[i])*gammaNFluid[i]/(mag(gammaNFluid[i])+VSMALL);
 
 
         const dictionary& pimpleDict =
