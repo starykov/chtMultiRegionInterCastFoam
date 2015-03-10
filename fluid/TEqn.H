@@ -9,20 +9,27 @@
 
     solverPerformance::debug=0; // do not write solver specification out again
 
-    gamma.storePrevIter();
+    //gammaOld = gamma;
+    //gamma.storePrevIter();
+
 
     do
       {
 
-    	gammaOld = gamma.prevIter();
+    	//gammaOld = gamma.prevIter();
     	 gamma.storePrevIter();
+    	//gamma.write();
+    	//gammaOld.write();
+    	dgamma = gamma-gammaOld;
+    	//gammaO.write();
 
 
     	    iter++;
     	//if (gamma == gammaOld) {Info << "gamma is equal to gammaold" << endl;}
     	    dgammadt = (gamma-gammaOld)/runTime.deltaT();
+    	    //dgammadt = fvc::ddt(gamma);
     LSource = L*rho/mixture.Cp()*(dgammadt);
-
+    	//dgammadt.write();
 
 
     fvScalarMatrix TEqn
@@ -62,7 +69,7 @@
 
   }while ((iter < iterMax) && (diff1 > convergence));
 
-
+    gammaOld=gamma;
     //TEqn.relax();
     //TEqn.solve();
 

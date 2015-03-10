@@ -22,6 +22,7 @@ PtrList<dimensionedScalar> dFluid(fluidRegions.size());
 	PtrList<dimensionedScalar> LFluid(fluidRegions.size());
 	PtrList<volScalarField> LSourceFluid(fluidRegions.size());
 	PtrList<volScalarField> dgammadtFluid(fluidRegions.size());
+	PtrList<volScalarField> dgammaFluid(fluidRegions.size());
 	PtrList<volScalarField> gammaOldFluid(fluidRegions.size());
 
     PtrList<volVectorField> UFluid(fluidRegions.size());
@@ -540,6 +541,31 @@ PtrList<dimensionedScalar> dFluid(fluidRegions.size());
 								                )
             )
         );
+
+        Info<< "    Adding to gammaFluid\n" << endl;
+        dgammaFluid.set
+        (
+            i,
+            new volScalarField
+            (
+                IOobject
+                (
+                    "dgamma",
+                    runTime.timeName(),
+                    fluidRegions[i],
+                    IOobject::NO_READ,
+                    IOobject::AUTO_WRITE
+                ),
+                fluidRegions[i],
+				dimensionedScalar
+								                (
+								                    "dgamma",
+													dimensionSet (0,0,0,0,0,0,0),
+								                    0
+								                )
+            )
+        );
+
 
         Info<< "    Adding to gammaFluid\n" << endl;
                 gammaOldFluid.set
