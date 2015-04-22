@@ -42,6 +42,7 @@ Description
 #include "fixedGradientFvPatchFields.H"
 #include "regionProperties.H"
 #include "compressibleCourantNo.H"
+#include "gammaCourantNo.H"
 #include "solidRegionDiffNo.H"
 #include "solidThermo.H"
 #include "radiationModel.H"
@@ -74,10 +75,12 @@ int main(int argc, char *argv[])
 
     #include "initContinuityErrs.H"
     #include "readTimeControls.H"
+	#include "readFluidTimeControls.H"
     #include "readSolidTimeControls.H"
 
 
     #include "compressibleMultiRegionCourantNo.H"
+	#include "compressibleMultiRegionGammaCourantNo.H"
     #include "solidRegionDiffusionNo.H"
     #include "setInitialMultiRegionDeltaT.H"
 
@@ -88,6 +91,7 @@ int main(int argc, char *argv[])
         #include "readPIMPLEControls.H"
 
         #include "compressibleMultiRegionCourantNo.H"
+		#include "compressibleMultiRegionGammaCourantNo.H"
         #include "solidRegionDiffusionNo.H"
         #include "setMultiRegionDeltaT.H"
 

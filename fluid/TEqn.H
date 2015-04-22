@@ -93,6 +93,8 @@
       gammaN.dimensions().reset(dimless);
       gammaN=-1.0*pos(T-Tsol)*pos(Tliq-T)*gammaN/(mag(gammaN)+SMALL);
 
+      v = alpha1*pos(T-Tsol)*pos(Tliq-T)*mag(dgammadt)/(mag(fvc::grad(gamma))+dimensionedScalar("SMALL", dimless/dimLength, SMALL));
+
     Info<< "min(T) " << min(T).value() << " max(T) " << max(T).value() << endl;
     Info<< "min(T(alloy)) " << min(T*alpha1).value() << " max(T(alloy)) " << max(T*alpha1).value() << endl;
 

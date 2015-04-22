@@ -43,7 +43,12 @@ if (adjustTimeStep)
         DiNum = SMALL;
     }
 
-    scalar maxDeltaTFluid = maxCo/(CoNum + SMALL);
+    if (gammaCoNum == -GREAT)
+        {
+            gammaCoNum = SMALL;
+        }
+
+    scalar maxDeltaTFluid = min(maxCo/(CoNum + SMALL),maxGammaCo/(gammaCoNum + SMALL));
     scalar maxDeltaTSolid = maxDi/(DiNum + SMALL);
 
     scalar deltaTFluid =

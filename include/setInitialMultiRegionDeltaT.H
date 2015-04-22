@@ -31,7 +31,7 @@ Description
 
 if (adjustTimeStep)
 {
-    if ((runTime.timeIndex() == 0) && ((CoNum > SMALL) || (DiNum > SMALL)))
+    if ((runTime.timeIndex() == 0) && ((CoNum > SMALL) || (DiNum > SMALL)) || (gammaCoNum > SMALL))
     {
         if (CoNum < SMALL)
         {
@@ -43,11 +43,16 @@ if (adjustTimeStep)
             DiNum = SMALL;
         }
 
+        if (gammaCoNum < SMALL)
+                {
+                    gammaCoNum = SMALL;
+                }
+
         runTime.setDeltaT
         (
             min(runTime.deltaT().value(),min
             (
-                min(maxCo/CoNum, maxDi/DiNum)*runTime.deltaT().value(),
+                min(min(maxCo/CoNum, maxDi/DiNum),maxGammaCo/gammaCoNum)*runTime.deltaT().value(),
                 maxDeltaT
             ))
         );

@@ -61,6 +61,7 @@
 	volScalarField& dgammadt = dgammadtFluid[i];
 	volScalarField& gammaOld = gammaOldFluid[i];
 	volScalarField& dgamma = dgammaFluid[i];
+	volScalarField& v = vFluid[i];
 
 
     //rhoPhi.write();

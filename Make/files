@@ -1,4 +1,5 @@
 fluid/compressibleCourantNo.C
+fluid/gammaCourantNo.C
 solid/solidRegionDiffNo.C
 chtMultiRegionInterCastFoam.C
 
